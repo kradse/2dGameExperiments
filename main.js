@@ -1,36 +1,78 @@
+import { findPath } from "./astar.js"
+import { getMap } from "./map.js"
+import { getPlayer } from "./player.js"
 const screen = document.getElementById('screen')
 const ctx = screen.getContext('2d')
 screen.width = 640
 screen.height = 480
+
+let map = getMap()
+let player = getPlayer()
+
+/**
+ * walkable
+ * obstcle
+ * player
+ * endgoal
+ * path
+ */
+const clrArr = ['#fff', '#000', '#f0f', '#0ff', '#0f0']
 
 
 const drawGrid = () => {
 	ctx.clearRect(0, 0, screen.width, screen.height)
 	ctx.beginPath()
 
-
 	for (let x = 80; x < 640; x+=80) {
 		ctx.moveTo(x, 0)
 		ctx.lineTo(x, screen.height)
 	}
 
-	// for (let y = 80; y < 480; y+=80) {
-	// 	ctx.moveTo(0, y)
-	// 	ctx.lineTo(0, screen.width)
-	// }
-
-
-	ctx.moveTo(0, 80)
-	ctx.lineTo(0, screen.width)
-
-	// ctx.moveTo(160, 0)
-	// ctx.lineTo(160, screen.height)
+	for (let y = 80; y < 480; y+=80) {
+		ctx.moveTo(0, y)
+		ctx.lineTo(screen.width, y)
+	}
 
 	ctx.stroke()
+
+	for (let y = 0; y < map.length; y++) {
+		for (let x = 0; x < map[y].length; x++) {
+			ctx.fillStyle = clrArr[map[y][x]]
+			ctx.fillRect(x*80, y*80, 80, 80)
+		}
+	}
+
+	findPath()
 }
-drawGrid()
+
+screen.addEventListener("click", function(e){
+	// console.log(e)
+	const x = Math.floor(e.offsetX / 80)
+	const y = Math.floor(e.offsetY / 80)
+
+	// console.log({x: x, y: y})
+
+	ctx.fillStyle = '#000'
+	ctx.fillRect(x*80, y*80, 80, 80)
+
+	// findPath()
+})
+
+
+
+const goal = {
+	x: 2,
+	y: 5
+}
+
+const setMarkers = () => {
+	map[player.loc.y][player.loc.x] = 2
+	map[goal.y][goal.x] = 3
+
+	drawGrid()
+}
+setMarkers()
 
 
 
 
-ctx.fillRect(50, 50, 50, 50)
