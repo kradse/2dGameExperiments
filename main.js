@@ -1,6 +1,7 @@
 import { findPath } from "./astar.js"
 import { getMap } from "./map.js"
 import { getPlayer, getGoal } from "./player.js"
+import { getCamera, moveCamera } from "./camera.js"
 const screen = document.getElementById('screen')
 const ctx = screen.getContext('2d')
 screen.width = 640
@@ -8,6 +9,7 @@ screen.height = 480
 
 let map = getMap()
 let player = getPlayer()
+let camera = getCamera()
 
 /**
  * walkable
@@ -26,10 +28,11 @@ export const updateMap = () => {
 	drawGrid()
 }
 
-const drawGrid = () => {
+export const drawGrid = () => {
 	ctx.clearRect(0, 0, screen.width, screen.height)
 	ctx.beginPath()
 
+	/*
 	for (let x = 80; x < 640; x+=80) {
 		ctx.moveTo(x, 0)
 		ctx.lineTo(x, screen.height)
@@ -41,11 +44,12 @@ const drawGrid = () => {
 	}
 
 	ctx.stroke()
+	*/
 
 	for (let y = 0; y < map.length; y++) {
 		for (let x = 0; x < map[y].length; x++) {
 			ctx.fillStyle = clrArr[map[y][x]]
-			ctx.fillRect(x*80, y*80, 80, 80)
+			ctx.fillRect((x*80) + camera.x, (y*80) + camera.y, 80, 80)
 		}
 	}
 
@@ -65,8 +69,23 @@ const drawGrid = () => {
 	// findPath()
 })*/
 
-document.addEventListener("keypress", function onPress(e) {
-	console.log(e)
+document.addEventListener("keydown", function onPress(e) {
+	let dir
+	if (e.code == 'ArrowUp') {
+		dir = 'up'
+	}
+	if (e.code == 'ArrowRight') {
+		dir = 'right'
+	}
+	if (e.code == 'ArrowDown') {
+		dir = 'down'
+	}
+	if (e.code == 'ArrowLeft') {
+		dir = 'left'
+	}
+
+	moveCamera(dir)
+	// console.log(e)
 })
 
 
