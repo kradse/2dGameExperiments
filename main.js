@@ -1,6 +1,6 @@
 import { findPath } from "./astar.js"
 import { getMap } from "./map.js"
-import { getPlayer } from "./player.js"
+import { getPlayer, getGoal } from "./player.js"
 const screen = document.getElementById('screen')
 const ctx = screen.getContext('2d')
 screen.width = 640
@@ -18,6 +18,13 @@ let player = getPlayer()
  */
 const clrArr = ['#fff', '#000', '#f0f', '#0ff', '#0f0']
 
+export const updateMap = () => {
+	// console.log('updateMap', player.path)
+	player.path.forEach(element => {
+		map[element.y][element.x] = 4
+	})
+	drawGrid()
+}
 
 const drawGrid = () => {
 	ctx.clearRect(0, 0, screen.width, screen.height)
@@ -42,10 +49,10 @@ const drawGrid = () => {
 		}
 	}
 
-	findPath()
+	findPath(player.loc.x, player.loc.y)
 }
 
-screen.addEventListener("click", function(e){
+/*screen.addEventListener("click", function(e){
 	// console.log(e)
 	const x = Math.floor(e.offsetX / 80)
 	const y = Math.floor(e.offsetY / 80)
@@ -56,14 +63,14 @@ screen.addEventListener("click", function(e){
 	ctx.fillRect(x*80, y*80, 80, 80)
 
 	// findPath()
+})*/
+
+document.addEventListener("keypress", function onPress(e) {
+	console.log(e)
 })
 
 
-
-const goal = {
-	x: 2,
-	y: 5
-}
+const goal = getGoal()
 
 const setMarkers = () => {
 	map[player.loc.y][player.loc.x] = 2
@@ -72,7 +79,4 @@ const setMarkers = () => {
 	drawGrid()
 }
 setMarkers()
-
-
-
 
